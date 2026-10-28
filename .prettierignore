@@ -1,0 +1,8 @@
+node_modules
+dist
+build
+coverage
+legacy
+apps/mobile/android
+package-lock.json
+**/*.md
