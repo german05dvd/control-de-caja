@@ -1,0 +1,126 @@
+/*
+  Sistema de diseño — variables globales (F-0.2)
+
+  Decisiones del equipo:
+  - Paleta base celadón: #ace1af, #f5faf7, #c9e7d3, #e3f0ea y #9bb7c9.
+  - Tipografía sencilla, estilo Arial (se usa Arimo, con las mismas métricas, incluida en la app
+    para que se vea igual en cualquier teléfono).
+  - Proporción áurea (φ ≈ 1.618) en tamaños de letra, espaciado, radios, layout y escala tonal.
+
+  Nota de contraste: ningún tono de la paleta base sirve como color de texto sobre fondo claro
+  (celadón sobre #f5faf7 = 1,4:1; azul grisáceo = 2,0:1; el mínimo accesible es 4,5:1).
+  Por eso el texto usa tonos profundos DERIVADOS de los mismos matices: la luminosidad del color
+  base se multiplica por 1/φ en cada paso (L × φ^-n), igual que la escala de tipografía.
+
+  Solo tema claro por ahora. El tema oscuro (F-1.1) reutiliza la misma escala invertida.
+  Los colores semánticos (ingreso, egreso, advertencia, error) se definen en F-1.1.
+*/
+
+:root {
+  color-scheme: light;
+
+  /* ── Proporción áurea ─────────────────────────────────────────── */
+  --phi: 1.618034;
+  --phi-root: 1.27202; /* √φ: "paso medio" de la escala tipográfica */
+  --phi-inverse: 0.618034;
+  --ratio-major: 61.8%;
+  --ratio-minor: 38.2%;
+
+  /* ── Paleta base (dada por el equipo) ─────────────────────────── */
+  --celadon-50: #f5faf7;
+  --celadon-100: #e3f0ea;
+  --celadon-200: #c9e7d3;
+  --celadon-300: #ace1af; /* color de marca */
+  --mist-300: #9bb7c9; /* acento azul grisáceo */
+
+  /* ── Tonos profundos derivados (L × φ^-n) ─────────────────────── */
+  --celadon-500: #41b448;
+  --celadon-700: #286f2c;
+  --celadon-800: #19451b;
+  --celadon-900: #0f2b11;
+  --mist-500: #4d758f;
+  --mist-700: #304858;
+  --mist-800: #1d2d37;
+  --mist-900: #121c22;
+
+  /* ── Estados (paso fino φ^-1/4) ───────────────────────────────── */
+  --brand-pressed: #8bd58f;
+  --brand-hover: #b5e4b8;
+  --accent-pressed: #81a4bb;
+  --accent-hover: #a6bfcf;
+
+  /* ── Roles de color ───────────────────────────────────────────── */
+  --bg-page: var(--celadon-50);
+  --bg-surface: var(--celadon-100);
+  --bg-surface-strong: var(--celadon-200);
+  --brand: var(--celadon-300);
+  --brand-contrast: var(--celadon-800);
+  --accent: var(--mist-300);
+  --accent-contrast: var(--mist-900);
+  --text-primary: var(--celadon-800);
+  --text-secondary: var(--mist-700);
+  --border: var(--celadon-200);
+
+  /* ── Tipografía ───────────────────────────────────────────────── */
+  --font-family-base: Arimo, Arial, 'Liberation Sans', Roboto, 'Helvetica Neue', sans-serif;
+  --fw-regular: 400;
+  --fw-bold: 700;
+
+  /* Cada paso multiplica por √φ; dos pasos = φ (cuerpo → título). */
+  --fs-caption: calc(1rem / var(--phi-root)); /* ≈ 12,6 px */
+  --fs-body: 1rem; /* 16 px */
+  --fs-lead: calc(1rem * var(--phi-root)); /* ≈ 20,4 px */
+  --fs-title: calc(1rem * var(--phi)); /* ≈ 25,9 px */
+  --fs-display: calc(1rem * var(--phi) * var(--phi-root)); /* ≈ 32,9 px */
+
+  --lh-body: var(--phi);
+  --lh-heading: var(--phi-root);
+
+  /* ── Espaciado: serie de Fibonacci (5, 8, 13, 21, 34, 55 px) ──── */
+  --space-1: 0.3125rem;
+  --space-2: 0.5rem;
+  --space-3: 0.8125rem;
+  --space-4: 1.3125rem;
+  --space-5: 2.125rem;
+  --space-6: 3.4375rem;
+
+  /* ── Radios: Fibonacci ────────────────────────────────────────── */
+  --radius-1: 0.3125rem;
+  --radius-2: 0.5rem;
+  --radius-3: 0.8125rem;
+  --radius-4: 1.3125rem;
+
+  /* ── Mapeo a Ionic ────────────────────────────────────────────── */
+  --ion-font-family: var(--font-family-base);
+
+  --ion-background-color: #f5faf7;
+  --ion-background-color-rgb: 245, 250, 247;
+  --ion-text-color: #19451b;
+  --ion-text-color-rgb: 25, 69, 27;
+  --ion-border-color: #c9e7d3;
+  --ion-card-background: #e3f0ea;
+  --ion-item-background: #f5faf7;
+
+  --ion-color-primary: #ace1af;
+  --ion-color-primary-rgb: 172, 225, 175;
+  --ion-color-primary-contrast: #19451b;
+  --ion-color-primary-contrast-rgb: 25, 69, 27;
+  --ion-color-primary-shade: #8bd58f;
+  --ion-color-primary-tint: #b5e4b8;
+
+  --ion-color-secondary: #9bb7c9;
+  --ion-color-secondary-rgb: 155, 183, 201;
+  --ion-color-secondary-contrast: #121c22;
+  --ion-color-secondary-contrast-rgb: 18, 28, 34;
+  --ion-color-secondary-shade: #81a4bb;
+  --ion-color-secondary-tint: #a6bfcf;
+}
+
+html,
+body {
+  background: var(--bg-page);
+  color: var(--text-primary);
+  font-family: var(--font-family-base);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+}

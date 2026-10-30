@@ -1,6 +1,7 @@
 import js from '@eslint/js';
 import { defineConfig, globalIgnores } from 'eslint/config';
 import prettier from 'eslint-config-prettier';
+import reactHooks from 'eslint-plugin-react-hooks';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
@@ -65,6 +66,16 @@ export default defineConfig([
   {
     files: ['apps/server/**/*.ts', '**/*.config.{js,mjs,cjs,ts}', 'scripts/**/*.{js,mjs,ts}'],
     languageOptions: { globals: globals.node },
+  },
+
+  // React (app móvil): reglas de hooks
+  {
+    files: ['apps/mobile/**/*.{ts,tsx}'],
+    plugins: { 'react-hooks': reactHooks },
+    rules: {
+      'react-hooks/rules-of-hooks': 'error',
+      'react-hooks/exhaustive-deps': 'warn',
+    },
   },
 
   // Dominio puro: sin DOM/red/almacenamiento y sin leer reloj ni azar (reglas deterministas).

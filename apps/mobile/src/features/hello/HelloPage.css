@@ -1,0 +1,158 @@
+/*
+  Pantalla provisional E0. Proporción áurea: marca 38,2 % / contenido 61,8 %.
+  Todo el espaciado y los radios salen de variables.css (serie de Fibonacci).
+*/
+
+.hello {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  background: var(--bg-page);
+}
+
+/* ── Bloque de marca (38,2 %) ───────────────────────────────────── */
+.hello__brand {
+  flex: 0 0 var(--ratio-minor);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: var(--space-2);
+  padding: calc(var(--space-5) + env(safe-area-inset-top, 0px)) var(--space-4) var(--space-4);
+  background: var(--brand);
+  color: var(--brand-contrast);
+  border-bottom-left-radius: var(--radius-4);
+  border-bottom-right-radius: var(--radius-4);
+}
+
+.hello__eyebrow {
+  font-size: var(--fs-caption);
+  font-weight: var(--fw-bold);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.hello__title {
+  margin: 0;
+  font-size: var(--fs-display);
+  font-weight: var(--fw-bold);
+  line-height: var(--lh-heading);
+}
+
+.hello__tagline {
+  margin: 0;
+  font-size: var(--fs-lead);
+  line-height: var(--lh-heading);
+}
+
+.hello__version {
+  align-self: flex-start;
+  margin-top: var(--space-2);
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-4);
+  background: var(--bg-page);
+  font-size: var(--fs-caption);
+  font-weight: var(--fw-bold);
+}
+
+/* ── Bloque de contenido (61,8 %) ───────────────────────────────── */
+.hello__body {
+  flex: 1 1 var(--ratio-major);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  padding-bottom: calc(var(--space-4) + env(safe-area-inset-bottom, 0px));
+}
+
+.hello__card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-3);
+}
+
+.hello__card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.hello__card-title {
+  margin: 0;
+  font-size: var(--fs-title);
+  line-height: var(--lh-heading);
+}
+
+.hello__details {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin: 0;
+}
+
+.hello__details > div {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.hello__details dt {
+  color: var(--text-secondary);
+}
+
+.hello__details dd {
+  margin: 0;
+  font-weight: var(--fw-bold);
+}
+
+.hello__reason {
+  margin: 0;
+  color: var(--text-secondary);
+}
+
+.hello__notice {
+  margin: 0;
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--border);
+  font-size: var(--fs-caption);
+  color: var(--text-secondary);
+}
+
+.hello__temp {
+  margin: 0;
+  font-size: var(--fs-caption);
+  color: var(--text-secondary);
+  text-align: center;
+}
+
+/* ── Indicador de estado (icono + texto) ────────────────────────── */
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-4);
+  font-size: var(--fs-caption);
+  font-weight: var(--fw-bold);
+  white-space: nowrap;
+}
+
+.status-pill--unset,
+.status-pill--checking {
+  background: var(--bg-surface-strong);
+  color: var(--text-primary);
+}
+
+.status-pill--online {
+  background: var(--brand);
+  color: var(--brand-contrast);
+}
+
+.status-pill--offline {
+  background: var(--accent);
+  color: var(--accent-contrast);
+}

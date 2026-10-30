@@ -1,0 +1,21 @@
+{
+  "name": "@caja/mobile",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview --host",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "@types/react": "^18.3.31",
+    "@types/react-dom": "^18.3.7",
+    "@vitejs/plugin-react": "^6.1.2",
+    "vite": "^8.3.5",
+    "vitest": "^5.0.5"
+  }
+}
