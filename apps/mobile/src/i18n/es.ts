@@ -4,7 +4,7 @@
  */
 export const es = {
   app: {
-    name: 'Control de Caja',
+    name: 'CashFlow',
     tagline: 'Gestión operativa de caja, con o sin conexión',
   },
   hello: {

@@ -1,0 +1,100 @@
+name: Release APK
+
+# Se ejecuta al subir una etiqueta de versión, por ejemplo: git tag v0.0.1 && git push origin v0.0.1
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  apk:
+    name: Compilar, firmar y publicar la APK
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: gradle
+
+      - uses: android-actions/setup-android@v3
+
+      - run: npm ci
+
+      - name: Versión a partir de la etiqueta
+        run: echo "VERSION=${GITHUB_REF_NAME#v}" >> "$GITHUB_ENV"
+
+      - name: Compilar la app web
+        run: npm run build -w @caja/mobile
+
+      - name: Sincronizar Capacitor
+        working-directory: apps/mobile
+        run: npx cap sync android
+
+      # versionCode sube con cada ejecución: así cada APK se instala sobre la anterior.
+      - name: Fijar versionName y versionCode
+        working-directory: apps/mobile/android/app
+        run: |
+          sed -i -E "s/versionCode [0-9]+/versionCode ${GITHUB_RUN_NUMBER}/; s/versionName \"[^\"]*\"/versionName \"${VERSION}\"/" build.gradle
+          grep -nE "versionCode|versionName" build.gradle
+
+      - name: Compilar APK release (sin firmar)
+        working-directory: apps/mobile/android
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleRelease
+
+      # Plan A: si existen los secretos del repositorio se usa esa llave.
+      # Plan B: si no, se usa la llave de demostración incluida en el repo.
+      - name: Alinear y firmar la APK
+        env:
+          KS_B64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          KS_PASS: ${{ secrets.ANDROID_KEYSTORE_PASSWORD || 'cashflow-demo' }}
+          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS || 'cashflow' }}
+          KEY_PASS: ${{ secrets.ANDROID_KEY_PASSWORD || 'cashflow-demo' }}
+        run: |
+          if [ -n "$KS_B64" ]; then
+            echo "$KS_B64" | base64 -d > "$RUNNER_TEMP/release.keystore"
+            KS="$RUNNER_TEMP/release.keystore"
+            echo "Firmando con la llave de los secretos (Plan A)."
+          else
+            KS="apps/mobile/signing/demo-release.keystore"
+            echo "::warning::Firmando con la llave de DEMOSTRACIÓN (Plan B)."
+          fi
+
+          BT="$(ls -d "$ANDROID_HOME"/build-tools/* | sort -V | tail -1)"
+          UNSIGNED="$(ls apps/mobile/android/app/build/outputs/apk/release/*-unsigned.apk | head -1)"
+          OUT="CashFlow-${GITHUB_REF_NAME}.apk"
+
+          "$BT/zipalign" -p -f 4 "$UNSIGNED" "$RUNNER_TEMP/aligned.apk"
+          "$BT/apksigner" sign \
+            --ks "$KS" --ks-pass env:KS_PASS \
+            --ks-key-alias "$KEY_ALIAS" --key-pass env:KEY_PASS \
+            --out "$OUT" "$RUNNER_TEMP/aligned.apk"
+          "$BT/apksigner" verify --print-certs "$OUT"
+          echo "APK_FILE=$OUT" >> "$GITHUB_ENV"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cashflow-apk
+          path: ${{ env.APK_FILE }}
+
+      - name: Publicar en Releases
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
+            gh release upload "$GITHUB_REF_NAME" "$APK_FILE" --clobber
+          else
+            gh release create "$GITHUB_REF_NAME" "$APK_FILE" \
+              --title "CashFlow $GITHUB_REF_NAME" --generate-notes
+          fi

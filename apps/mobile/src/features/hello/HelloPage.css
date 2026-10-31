@@ -6,13 +6,14 @@
 .hello {
   display: flex;
   flex-direction: column;
-  min-height: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
   background: var(--bg-page);
 }
 
 /* ── Bloque de marca (38,2 %) ───────────────────────────────────── */
 .hello__brand {
-  flex: 0 0 var(--ratio-minor);
+  flex: 38.2 1 0px; /* 38,2 % de la altura (var(--ratio-minor)) */
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -56,7 +57,7 @@
 
 /* ── Bloque de contenido (61,8 %) ───────────────────────────────── */
 .hello__body {
-  flex: 1 1 var(--ratio-major);
+  flex: 61.8 1 0px; /* 61,8 % de la altura (var(--ratio-major)) */
   display: flex;
   flex-direction: column;
   gap: var(--space-3);

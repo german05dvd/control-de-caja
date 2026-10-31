@@ -62,7 +62,7 @@ export function HelloPage() {
                 type="url"
                 inputMode="url"
                 autocapitalize="off"
-                autocorrect="off"
+                autocorrect={false}
                 spellcheck={false}
                 placeholder={es.hello.urlPlaceholder}
                 helperText={es.hello.urlHelper}
